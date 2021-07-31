@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Forum</title>
+    <link rel="stylesheet" href="css/index.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="javascripts/init.js"></script>
 </head>
@@ -26,6 +27,18 @@
         <br/>
         <button type="submit" id="send_btn">Send</button>        
     </div>
+
+    <div class="reply_container hide_style">
+      <h2>Reply layout</h2>
+      <p>UserName:</p>
+      <input type="text" id="user_name_input_reply">
+      <p>Message:</p>
+      <textarea name="comment" cols="40" rows="3" id="text_input_reply"></textarea>
+      <br/>
+      <button type="submit" id="reply_btn">Reply</button>        
+    </div>
+
+  
     
     <div class="forum_container">
         <ul class="comment_list">            

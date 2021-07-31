@@ -1,3 +1,5 @@
+var parentReplyIdClick = 0;
+
 async function GetComments() {
     $.ajax({
         url: `${window.serverApiUrl}/comments/`,
@@ -34,7 +36,7 @@ function createListOfComments(comments){
 
             const liCheck = document.getElementById('li_' + element.id);
             if (liCheck == null){
-                li.innerHTML = element.text + ': '+ element.userName + ', '+ element.date;
+                li.innerHTML = element.text + ': '+ element.userName + ', '+ element.date + ' <button type="submit" onclick="replyShow('+ element.id +')">Reply</button>';
                 ul.appendChild(li);
             }
             
@@ -52,10 +54,20 @@ function createListOfComments(comments){
                 li.setAttribute('id', 'li_'+element.id);
                 const liCheck = document.getElementById('li_' + element.id);
                 if (liCheck == null){
-                    li.innerHTML = element.text + ': '+ element.userName + ', '+ element.date;
+                    li.innerHTML = element.text + ': '+ element.userName + ', '+ element.date + ' <button type="submit" onclick="replyShow('+ element.id +')">Reply</button>';
                     parentLi.appendChild(parentUl);
                     parentUl.appendChild(li);
                 }              
+            }
+            else{
+                const li = document.createElement('li');
+                li.setAttribute('id', 'li_'+element.id);
+                const liCheck = document.getElementById('li_' + element.id);
+                if (liCheck == null){
+                    li.innerHTML = element.text + ': '+ element.userName + ', '+ element.date + ' <button type="submit" onclick="replyShow('+ element.id +')">Reply</button>';
+                    ulCheck.appendChild(parentUl);
+                    parentUl.appendChild(li);
+                }
             }
 
         }
@@ -77,7 +89,21 @@ function validation(comment) {
     return true;
 }
 
+function replyShow(parentReplyId){
+    document.getElementById("user_name_input").value = "";
+    document.getElementById("text_input").value = "";
+    $(".comment_container").hide();
+    $("div").removeClass("hide_style");
+    $(".reply_container").show();
+    document.getElementById("user_name_input_reply").value = "";
+    document.getElementById("text_input_reply").value = "";
+    parentReplyIdClick = parentReplyId;
+        
+    
+}
+
 (async function () {
+    
     document.getElementById("send_btn").addEventListener("click", function() {
         const userName = document.getElementById("user_name_input").value;
         const text = document.getElementById("text_input").value;
@@ -98,7 +124,38 @@ function validation(comment) {
         CreateComment(comment);
     });
 
+    document.getElementById("reply_btn").addEventListener("click", function() {
+        const userName = document.getElementById("user_name_input_reply").value;
+        const text = document.getElementById("text_input_reply").value;
+
+        let comment = {};
+        comment.id = 0;
+        comment.parentId = parentReplyIdClick;
+        comment.date = new Date();
+        comment.userName = userName;
+        comment.text = text;
+
+        const isValid = validation(comment);
+
+        if (!isValid) {
+            alert("Validation error. All fields must be filled.");
+            return;
+        }
+
+        CreateComment(comment);
+        
+        $(".comment_container").show();
+
+        const reply_container = document.getElementsByClassName('reply_container')[0];
+        reply_container.classList.add("hide_style");
+        $(".rely_container").hide();
+
+    });
+
+
     
     await GetComments();
 
 })()
+
+
