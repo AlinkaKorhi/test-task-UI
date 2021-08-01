@@ -1,0 +1,4 @@
+#Ignore files after instalation http-server in project folder
+
+node_modules/
+package-lock.json
